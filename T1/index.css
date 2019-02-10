@@ -9,3 +9,21 @@
 .svgborder {
     background-color: #FFC988;
 }
+.bar {
+  fill: #007FFF;
+  stroke: black;
+  stroke-width: 2
+}
+.bar:hover {
+  fill: yellow
+}
+.tooltip {
+    position: absolute;
+    z-index: 10;
+    background-color: lightblue;
+    text-align: center;
+    padding: 4px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: brown;
+}
