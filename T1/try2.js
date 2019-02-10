@@ -19,7 +19,7 @@ var binArray = new Array(numBins).fill(0);//initialize an array with 0. This arr
 var maxValue = 0;//min Value in the input
 var minValue = 0;//max value in the input
 var binWidth = width/(numBins);//calculate the width of the rect aka bar
-
+var columnNames = [0]; //populate all the columnNames
 //Load data from CSV hosted in http server
 d3.csv("http://localhost:8080/Admission_Predict.csv")
   .row(function(d) { return { gre: +d.gre,ac:+d.admitchance};})//curate the type of data if needed as d3 returns all as string
@@ -27,6 +27,10 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
 
   if(error){throw error;} //error handling
 
+  columnNames = d.columns;//load all column names for dynamic loading of data
+
+  loadColumns(); //Load the columns as a dropdown for user to select
+  
   maxValue = d3.max(d3.extent(d,function(d){ return d.gre}));//get the max value from the array of GRE values in the input
   minValue = d3.min(d3.extent(d,function(d){ return d.gre}));//get the min value from the array of GRE values in the input
 
@@ -74,28 +78,29 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
 
     //define axes
     var xAxis = d3.axisBottom(xScale);
-    var yAxis = d3.axisLeft(yScale).tickFormat(function(d){ // Try with X Scaling too.
+    var yAxis = d3.axisLeft(yScale).tickFormat(function(d){ // You can return whatever text you want to display on range values for Y axis. Like $ 20
         return  d;
     });
+
+  //Append to the parent group i.e. html -> svg -> g (parentGroup)
   parentGroup.append("g")
                .attr("class","xaxis")
                .attr("transform","translate(0,"+height+")")
                .call(xAxis)
-
-    parentGroup.append("g")
+  //Append to the parent group i.e. html -> svg -> g (parentGroup)
+  parentGroup.append("g")
                .attr("class","yaxis")
-               .attr("transform", "rotate(-360)")
                .call(yAxis)
 
-    var barGroups = parentGroup.selectAll("dataplots")
+  //Append to the parent group i.e. html -> svg -> g (parentGroup) and class as dataplots
+  var barGroups = parentGroup.selectAll("dataplots")
               .data(binArray)
               .enter()
               .append("g")
               .attr("class","dataplots")
 
-  console.log("Height"+height);
-  //height - (binArray[i])
-    var groupElements = barGroups
+  //Append to the parent group i.e. html -> svg -> g (parentGroup)
+  var groupElements = barGroups
                         .append("rect")
                         .attr("x",function(d, i) {return (binWidth*i);})
                         .attr("y",function(d, i) {return height-yScaleValues(binArray[i])})
@@ -108,6 +113,14 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
 
 
 
-    });//get end
+  });//get end
 
-function loadColumns(){}
+function loadColumns(){
+  console.log(columnNames);
+
+  var select = document.getElementById("p1");
+  for(index in columnNames) {
+      select.options[select.options.length] = new Option(columnNames[index], columnNames[index]);
+  }
+
+}
