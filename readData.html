@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://d3js.org/d3.v4.min.js">
+  </script>
+  <style>
+    svg rect{
+      fill: orange;
+    }
+    svg text {
+      fill:white;
+      font: 10px sans-serif;
+      text-anchor: end;
+    }
+  </style>
+</head>
+<body style="background-color:black">
+<select id="p1" onclick="updateBar();">
+<option value="height">Height</option>
+<option value="weight">Weight</option>
+</select>
+  <script>
+    var global = 0;
+    /**function updateBar() {
+
+        var zone = document.getElementById("p1");
+
+        if (zone.value == "weight"){
+
+            alert("You clicked Zone 1.");
+            first();
+        }
+        else {
+          second();
+        }
+    }
+    function first(){*/
+    var data = d3.csv("http://localhost:8080/MOCK_DATA.csv")
+    .row(function(d) { return { Age: +d.Age,Height:+d.Height,Weight:+d.Weight};})
+    .get(function(error,d) { createBarChart(d);});
+
+    var canvas = d3.select("body").append("svg").attr("width",800).attr("height",600).attr("margin",100);
+    var barWidth = 50;
+    function createBarChart(d){
+      d.forEach(function(data,i) {
+        console.log(data[i].Age+"ss");
+
+
+    var bar = canvas.append("g").attr("transform","translate(" + 200 + "," + 200 + ")").append("rect")
+       .attr("x", 0)
+       .attr("y", i*barWidth)
+       .attr("width",  d.Height)
+       .attr("height", barWidth-2 )
+       .attr("stroke", "black")
+//.attr("width", function(){ if(global == 1) {console.log("here");return d.Weight;} else {return d.Height;}})
+
+    bar.attr("transform","rotate(-90)")
+
+
+    var xscale = d3.scaleLinear().domain(0,14).range([0,150]);
+    var yscale = d3.scaleLinear().domain(0,14).range([0,150]);
+
+    canvas.append("g")
+     .attr("transform","translate(" + 500 + "," + 500 + ")")
+     .call(d3.axisBottom(xscale))
+     .append("text")
+     .attr("text-anchor", "end")
+     .attr("stroke", "red")
+     .attr("font-size",50)
+     .text("Age");
+   })
+}
+  </script>
+</body>
+</html>

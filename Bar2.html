@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<style>
+</style>
+</head>
+<body>
+<p></p>
+
+<script>
+  d3.csv("http://localhost:8080/MOCK_DATA.csv", function(error,data) {
+    console.log(data);
+      for (var i = 0; i < data.length; i++) {
+        console.log(data[i].Age);
+
+         d3.select("p").data(data[i].Age).enter().append("p").text(function(d,i){ return Number(d)});
+         /**d3.select("p").data(data[i].Weight).enter().append("p").text(function(d,i){ return d});
+         d3.select("p").data(data[i].Height).enter().append("p").text(function(d,i){ return d});*/
+      }
+  });
+</script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<style>
+svg rect{
+        fill: orange;
+}
+svg text {
+        fill:white;
+        font: 10px sans-serif;
+        text-anchor: end;
+}
+</style>
+</head>
+<body>
+<script>
+  var width = 200,
+  scaleFactor = 10,
+  barHeight = 20;
+
+  d3.csv("http://localhost:8080/MOCK_DATA.csv", function(error,data) {
+    data.forEach(function(d) {
+        d.Age = +d.Age;
+        d.Weight = +d.Weight;
+        d.Height = +d.Height;
+        console.log(d.Age+" "+d.Height+" "+d.Weight);
+        console.log(d);
+        //d3.select("body").append("p").text(d.Age+" "+d.Height+" "+d.Weight);
+        //var canvas = d3.select("body").append("svg").selectAll("rect").enter().append("rect").attr("width",function(d,i){return d.Age*10}).attr("height",48).attr("y",function(d,i) { return i*50;}).attr("fill","blue");
+var canvas = d3.select("body").append("svg").attr("width",500).attr("height",500);
+var bar = canvas.append("g").attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"})
+var graph = bar.append("rect")
+               .attr("width", 20)
+               .attr("height",function(d,i) {return +d.Height;});
+    })});
+
+</script>
+</body>
+</html>
+
+
+<html>
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+        svg rect {
+            fill: orange;
+        }
+
+        svg text {
+             fill:white;
+            font: 10px sans-serif;
+            text-anchor: end;
+        }
+    </style>
+</head>
+<body>
+<script>
+        var data = [{Age: 4, Height: 36, Weight: 42},
+{Age: 11, Height: 19, Weight: 5},{Age: 4, Height: 35, Weight: 89},
+{Age: 19, Height: 39, Weight: 85},
+{Age: 10, Height: 25, Weight: 50},
+{Age: 12, Height: 41, Weight: 23},
+{Age: 17, Height: 41, Weight: 8},
+{Age: 7, Height: 29, Weight: 17},
+{Age: 7, Height: 14, Weight: 90},
+{Age: 13, Height: 14, Weight: 85}];
+        var width = 200,
+        scaleFactor = 10,
+        barHeight = 20;
+
+        var graph = d3.select("body")
+                  .append("svg")
+                  .attr("width", width)
+                  .attr("height", barHeight * data.length);
+
+        var bar = graph.selectAll("g")
+                  .data(data)
+                  .enter()
+                  .append("g")
+                  .attr("transform", function(d, i) {
+                        return "translate(0," + i * barHeight + ")";
+                  });
+
+    bar.append("rect")
+       .attr("width", function(d) {
+                return d.Height;
+       })
+       .attr("height", barHeight - 1);
+
+    bar.append("text")
+       .attr("x", function(d) { return (d*scaleFactor); })
+       .attr("y", barHeight / 2)
+       .attr("dy", ".35em")
+       .text(function(d) { return d; });
+
+</script>
+</body>
+</html>
