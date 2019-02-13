@@ -31,14 +31,13 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
   if(error){throw error;} //error handling
 
   columnNames = d.columns;//load all column names for dynamic loading of data
-
   loadColumns(); //Load the columns as a dropdown for user to select
+
   var inputArray = new Array(d.length).fill(0);
   d.forEach(function(data,i) {
     inputArray[i] = data[dropDownValue];
   })
   loadData(inputArray,dropDownValue);
-  //console.log(inputArray[0])
   d3.select("#p1").on("change",function(inp){
     d.forEach(function(data,i) {
       dropDownValue = d3.select('#p1').property('value');
@@ -46,14 +45,11 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
     })
     loadData(inputArray,dropDownValue);
   })
-
-
-
 });//get end
 
 
 function loadData(d,val){
-  console.log(val+"GG");
+  //console.log(val+"GG");
   //console.log(typeof(+value);
   d3.selectAll("g").remove();
   binArray.fill(0);
@@ -146,10 +142,39 @@ function loadData(d,val){
   .append("rect")
   .attr("x",function(d, i) {return (binWidth*i);})
   .attr("y",function(d, i) {return height-yScaleValues(binArray[i])})
-  .attr("width",binWidth-1)
+  .attr("width",binWidth-2)
   .attr("height",function(d,i){
     return yScaleValues(binArray[i])})
-    .on("mouseover",function(inp){})
+    .on("mouseover",function(inp){
+      var newHeight = d3.select(this).node().getBoundingClientRect().height;
+      //display value on top and increase width and decrease Height - I chose the decrease Height to ensure that the value it represents does not
+      //change but still shrinks to show that it is highlighted
+      d3.select(this).attr("fill","orange").transition().duration(400)
+      .attr("width",function(d, i) {return binWidth-5})
+      .attr("height",function(d,i){
+       return newHeight - 5})
+       parentGroup.append("text")
+        .attr('class', 'val')
+        .attr('x', function() {
+            return d3.select(this).node().getBoundingClientRect().width;
+        })
+        .attr('y', function() {
+            return d3.select(this).node().getBoundingClientRect().height + 102;
+        })
+        .text(function() {
+            return "S";  // Value of the text
+        });
+    })
+    .on("mouseout",function(inp){
+      d3.selectAll('.val')
+        .remove()
+      var newHeight = d3.select(this).node().getBoundingClientRect().height;
+      //display value on top and increase width and height
+      d3.select(this).attr("fill","#402269").attr("width",function(d, i) {return binWidth-2})
+      .attr("height",function(d,i){
+      return newHeight + 5 })
+    })
+
 
     //Clean if anything was added
     barGroups.exit().remove();
