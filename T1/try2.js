@@ -20,6 +20,7 @@ var maxValue = 0;//min Value in the input
 var minValue = 0;//max value in the input
 var binWidth = width/(numBins);//calculate the width of the rect aka bar
 var columnNames = [0]; //populate all the columnNames
+
 //Load data from CSV hosted in http server
 d3.csv("http://localhost:8080/Admission_Predict.csv")
   .row(function(d) { return { gre: +d.gre,ac:+d.admitchance};})//curate the type of data if needed as d3 returns all as string
@@ -30,7 +31,9 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
   columnNames = d.columns;//load all column names for dynamic loading of data
 
   loadColumns(); //Load the columns as a dropdown for user to select
-  
+
+  d3.select("#p1").on("change",function(data){loadData(d,d3.select('#p1').property('value'));})
+
   maxValue = d3.max(d3.extent(d,function(d){ return d.gre}));//get the max value from the array of GRE values in the input
   minValue = d3.min(d3.extent(d,function(d){ return d.gre}));//get the min value from the array of GRE values in the input
 
@@ -117,10 +120,18 @@ d3.csv("http://localhost:8080/Admission_Predict.csv")
 
 function loadColumns(){
   console.log(columnNames);
-
+  var selected = false;
   var select = document.getElementById("p1");
   for(index in columnNames) {
-      select.options[select.options.length] = new Option(columnNames[index], columnNames[index]);
+      if(columnNames[index] == "gre")//select by default
+        selected = true;
+      else
+        selected = false;
+      select.options[select.options.length] = new Option(columnNames[index], columnNames[index],selected,selected);
   }
+}
 
+function loadData(data,value){
+  console.log(data);
+  console.log(value);
 }

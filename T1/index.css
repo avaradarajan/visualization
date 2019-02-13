@@ -9,6 +9,9 @@
 .svgborder {
     background-color: #FFC988;
 }
+.body{
+  background-color : black
+}
 .bar {
   fill: #007FFF;
   stroke: black;
@@ -26,4 +29,17 @@
     border-radius: 4px;
     font-weight: bold;
     color: brown;
+}
+
+.dataplots{
+  fill: #402269
+}
+.domain {
+    stroke-width: 2;
+}
+
+.tick line {
+    stroke: #DA0D0F;
+    stroke-opacity: 0.4;
+    stroke-width: 2;  
 }
