@@ -25,7 +25,7 @@ var dropDownValue = "gre";
 var chartSwitch = "bar";
 //Load data from CSV hosted in http server
 d3.csv("http://localhost:8080/Admission_Predict.csv")
-.row(function(d) { return { gre: +d.gre,toefl: +d.toefl,ac:+d.admitchance};})//curate the type of data if needed as d3 returns all as string
+.row(function(d) { return { gre: +d.gre,toefl: +d.toefl,admitchance:+d.admitchance*100,urank:+d.urank,sop:+d.sop,lor:+d.lor,cgpa:+d.cgpa,research:+d.research};})//curate the type of data if needed as d3 returns all as string
 .get(function(error,d) {//callback function that gets called when all the data is loaded in the variable d here.
 
   if(error){throw error;} //error handling
@@ -136,45 +136,45 @@ function loadData(d,val){
   .enter()
   .append("g")
   .attr("class","dataplots")
-
+  console.log(binWidth+""+  width+""+height);
   //Append to the parent group i.e. html -> svg -> g (parentGroup)
   var groupElements = barGroups
   .append("rect")
+  .attr("val",function(d, i) {return (binArray[i]);})
   .attr("x",function(d, i) {return (binWidth*i);})
   .attr("y",function(d, i) {return height-yScaleValues(binArray[i])})
-  .attr("width",binWidth-2)
+  .attr("width",binWidth-5)
   .attr("height",function(d,i){
     return yScaleValues(binArray[i])})
-    .on("mouseover",function(inp){
-      var newHeight = d3.select(this).node().getBoundingClientRect().height;
-      //display value on top and increase width and decrease Height - I chose the decrease Height to ensure that the value it represents does not
-      //change but still shrinks to show that it is highlighted
-      d3.select(this).attr("fill","orange").transition().duration(400)
-      .attr("width",function(d, i) {return binWidth-5})
-      .attr("height",function(d,i){
-       return newHeight - 5})
-       parentGroup.append("text")
-        .attr('class', 'val')
-        .attr('x', function() {
-            return d3.select(this).node().getBoundingClientRect().width;
-        })
-        .attr('y', function() {
-            return d3.select(this).node().getBoundingClientRect().height + 102;
-        })
-        .text(function() {
-            return "S";  // Value of the text
-        });
+  .on("mouseover",function(inp){
+      var x = d3.select(this).node().getBoundingClientRect().x;
+      var y = d3.select(this).node().getBoundingClientRect().y;
+      //var val = d3.select(this).getAttribute("val");
+      d3.select(this).attr("fill","orange").attr("stroke-width","3").attr("stroke","green")
+      .attr("height",d3.select(this).node().getBoundingClientRect().height+2)
+      .attr("width",function(d, i) {return binWidth-3})
+
+      parentGroup.append("text")
+       .attr('class', 'val')
+       .attr('x', function() {
+           return x-80;
+       })
+       .attr('y', function() {
+           return y-180;
+       })
+       .text(function() {
+          //console.log(val);
+           return "val";  // Value of the text
+       });
+
     })
     .on("mouseout",function(inp){
-      d3.selectAll('.val')
-        .remove()
+      d3.selectAll('.val').remove()
       var newHeight = d3.select(this).node().getBoundingClientRect().height;
-      //display value on top and increase width and height
-      d3.select(this).attr("fill","#402269").attr("width",function(d, i) {return binWidth-2})
-      .attr("height",function(d,i){
-      return newHeight + 5 })
+      d3.select(this).attr("fill","#402269").attr("stroke-width","0")
+      .attr("height",d3.select(this).node().getBoundingClientRect().height-2)
+      .attr("width",function(d, i) {return binWidth-5})
     })
-
 
     //Clean if anything was added
     barGroups.exit().remove();
@@ -244,6 +244,8 @@ function loadData(d,val){
     for(index in columnNames) {
       if(columnNames[index] == "gre")//select by default
       selected = true;
+      else if(columnNames[index] == "id")
+        continue;
       else
       selected = false;
       select.options[select.options.length] = new Option(columnNames[index].toUpperCase(), columnNames[index],selected,selected);
