@@ -149,7 +149,7 @@ function loadData(d,val){
   .on("mouseover",function(inp){
       var x = d3.select(this).node().getBoundingClientRect().x;
       var y = d3.select(this).node().getBoundingClientRect().y;
-      //var val = d3.select(this).getAttribute("val");
+      var val = d3.select(this).attr("val");
       d3.select(this).attr("fill","orange").attr("stroke-width","3").attr("stroke","green")
       .attr("height",d3.select(this).node().getBoundingClientRect().height+2)
       .attr("width",function(d, i) {return binWidth-3})
@@ -164,7 +164,7 @@ function loadData(d,val){
        })
        .text(function() {
           //console.log(val);
-           return "val";  // Value of the text
+           return val;  // Value of the text
        });
 
     })

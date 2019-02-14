@@ -9,10 +9,24 @@
   <select id="p1" class="select">
   </select>
 </p>
+<p id="para2">USE SLIDER TO +/- BINS
+  <div class="slidecontainer">
+  <input type="range" min="2" max="22" value="11" class="slider" id="myRange"><span id="demo" style="position:absolute"></span>
+</div>
+</p>
+<datalist id="tickmarks" style="position:absolute">
+  <option value="2" label="0%">
+  <option value="5">
+  <option value="8">
+  <option value="11" label="50%">
+  <option value="14">
+  <option value="17">
+    <option value="20">
+  <option value="22" label="100%">
+</datalist>
 <script src="changeBar.js">
 </script>
-
-<script src = "rev1.js"></script>
+<script src = "drag.js"></script>
 </body>
 </html>
 <!--onload="loadColumns();"-->
