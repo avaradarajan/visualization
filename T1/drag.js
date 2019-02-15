@@ -75,7 +75,7 @@ function loadData(d,val){
   //Hash it into the 10 bins we have
   d.forEach(function(data,i) {
     //console.log("Here"+Math.floor((data-minValue)/binSize));
-    if(numBins>2)
+    if(!Number.isInteger((data-minValue)/binSize))
       binArray[Math.floor((data-minValue)/binSize)]++;
     else {
       console.log("Hey")
@@ -147,7 +147,7 @@ function loadData(d,val){
   .append("rect")
   .attr("val",function(d, i) {return (binArray[i]);})
   .attr("x",function(d, i) {return (binWidth*i);})
-  .attr("y",function(d, i) {return height-yScaleValues(binArray[i])})
+  .attr("y",function(d, i) {console.log("here"+height-yScaleValues(binArray[i]));return height-yScaleValues(binArray[i])})
   .attr("width",binWidth-5)
   .attr("height",function(d,i){
     return yScaleValues(binArray[i])})
@@ -159,7 +159,6 @@ function loadData(d,val){
       d3.select(this).attr("fill","orange").attr("stroke-width","3").attr("stroke","green")
       .attr("height",d3.select(this).node().getBoundingClientRect().height+2)
       .attr("width",function(d, i) {return binWidth-3})
-      console.log("x,y"+x+","+width);
       parentGroup.append("text")
        .attr('class', 'val')
        .attr('x', function() {
@@ -213,9 +212,8 @@ function loadData(d,val){
         .style("stroke","black")
         .style("stroke-width","3px")
         .style("fill", function(d,i){
-        var colorValue = d.value;
-        if(d.value>100){colorValue = d.value-100}
-        return d3.color("hsl(230, 80%, " + d.value + "%)");
+          var colorValue = d.value%100;
+          return d3.color("hsl(242, " + colorValue + "%, " + colorValue + "%)");
       })
       .attr("d",arc);
       var getAngle = function (d) {
@@ -314,20 +312,21 @@ function loadData(d,val){
     //Hash it into the 10 bins we have
     d.forEach(function(data,i) {
       //console.log("Here"+Math.floor((data-minValue)/binSize));
-      if(numBins>2)
+      if(!Number.isInteger((data-minValue)/binSize))
         binArray[Math.floor((data-minValue)/binSize)]++;
       else {
         console.log("Hey")
         binArray[Math.floor((data-minValue)/(binSize+0.1))]++;
       }
     })
-
+    var sum=0;
     //Checking the array contents
     for(loop=0;loop<binArray.length;loop++)
     {
+      sum += binArray[loop];
       console.log(binArray[loop]);
     }
-
+console.log("Sum"+sum);
     //calculating the max value of Y axis to define the Y-axis scale
     var maxValueForYAxis = d3.max(d3.extent(d,function(d,i){ return binArray[i]}));
     console.log("Max value for Y axis - "+maxValueForYAxis)
@@ -450,10 +449,9 @@ function loadData(d,val){
           .append("path")
           .style("stroke","black")
           .style("stroke-width","3px")
-          .style("fill", function(d,i){console.log("data"+d.value)
-          var colorValue = d.value;
-          if(d.value>100){colorValue = d.value-100}
-          return d3.color("hsl(230, 80%, " + d.value + "%)");
+          .style("fill", function(d,i){console.log("data"+typeof(d.value))
+          var colorValue = d.value%100;
+          return d3.color("hsl(242, " + colorValue + "%, " + colorValue + "%)");
         })
         .attr("d",arc);
         var getAngle = function (d) {
