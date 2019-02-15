@@ -13,7 +13,7 @@ var canvas = d3.select("body").append("svg").attr("width",width + margin).attr("
 
 
 var loop=0;//looping through any array in the code
-var numBins = 11;//number of bins/bars in the graph
+var numBins = 14;//number of bins/bars in the graph
 var binSize = 0;//range of values bin can hold i.e binSize = 5 if it can hold 290-294 values
 var xRanges = new Array(numBins).fill(0);//initialize an array with 0. This array is to define the range of values x Axis will be taking
 var binArray = new Array(numBins).fill(0);//initialize an array with 0. This array is to define the count of values in each bin
@@ -152,27 +152,22 @@ function loadData(d,val){
   .attr("height",function(d,i){
     return yScaleValues(binArray[i])})
   .on("mouseover",function(inp){
-      var x = d3.select(this).node().getBoundingClientRect().x;
-      var y = d3.select(this).node().getBoundingClientRect().y;
+      var x = d3.select(this).attr("x");
+      var y = d3.select(this).attr("y");
       var val = d3.select(this).attr("val");
+      var currentBarWidth = d3.select(this).attr("width");
       d3.select(this).attr("fill","orange").attr("stroke-width","3").attr("stroke","green")
       .attr("height",d3.select(this).node().getBoundingClientRect().height+2)
       .attr("width",function(d, i) {return binWidth-3})
-
+      console.log("x,y"+x+","+width);
       parentGroup.append("text")
        .attr('class', 'val')
        .attr('x', function() {
-         if(numBins>=11)
-           return x-75-numBins;
-        else if(numBins>=7){
-          return x-80+numBins;
-        }
-        else {
-          return x-50;
-        }
+         console.log(x);
+         return +x+((currentBarWidth-10)/2);
        })
        .attr('y', function() {
-           return y-190;
+           return +y-2;
        })
        .text(function() {
            return val;  // Value of the text
@@ -396,9 +391,10 @@ function loadData(d,val){
     .attr("height",function(d,i){
       return yScaleValues(binArray[i])})
     .on("mouseover",function(inp){
-        var x = d3.select(this).node().getBoundingClientRect().x;
-        var y = d3.select(this).node().getBoundingClientRect().y;
+        var x = d3.select(this).attr("x");
+        var y = d3.select(this).attr("y");
         var val = d3.select(this).attr("val");
+        var currentBarWidth = d3.select(this).attr("width");
         d3.select(this).attr("fill","orange").attr("stroke-width","3").attr("stroke","green")
         .attr("height",d3.select(this).node().getBoundingClientRect().height+2)
         .attr("width",function(d, i) {return binWidth-3})
@@ -406,17 +402,10 @@ function loadData(d,val){
         parentGroup.append("text")
          .attr('class', 'val')
          .attr('x', function() {
-           if(numBins>=11)
-             return x-80-numBins;
-          else if(numBins>=7){
-            return x-80+numBins;
-          }
-          else {
-            return x-50;
-          }
+           return +x+((currentBarWidth-10)/2);
          })
          .attr('y', function() {
-             return y-190;
+             return +y-2;
          })
          .text(function() {
              return val;  // Value of the text
